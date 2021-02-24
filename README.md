@@ -1,6 +1,8 @@
 # swaggerdocs-decorator
 
-This decorator is meant to reduce code bloat in your controllers by moving API documentation to another file. For a complete example, please see the files in the `example/` directory of this repo.
+This decorator is meant to reduce code bloat in your controllers by moving API documentation to another file. 
+
+For a complete example, please see the files in the `example/` directory of this repo.
 
 -----------
 
