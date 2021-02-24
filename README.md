@@ -42,5 +42,7 @@ export class ExampleDocsContainer {
   ]
   
   ApiExtraModels = [ExampleEntity, ExampleDTO]
+  
+  ...
 }
 ```
