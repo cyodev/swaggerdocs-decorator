@@ -1,3 +1,5 @@
+import {Injectable} from "@nestjs/common";
+import {ExampleCategory} from "./example.enums";
 import {
     ApiBadRequestResponse,
     ApiBody,
@@ -5,14 +7,14 @@ import {
     ApiOkResponse,
     ApiOperation,
     ApiParam
-} from '@nestjs/swagger'
-import { ExampleDTO, ExamplesBulkDTO, ExamplesListResponse } from './example.dto'
-import { ExampleCategory } from './example.enums'
-import { Injectable } from '@nestjs/common'
-import { ExampleEntity } from './example.entity'
+} from "@nestjs/swagger";
+import {ExampleController} from "./example.controller";
+import {ExampleDTO, ExamplesBulkDTO, ExamplesListResponse} from "./example.dto";
+import {SwaggerDocsContainer} from "../swagger-docs.types";
+import {ExampleEntity} from "./example.entity";
 
 @Injectable()
-export class ExampleSwaggerDocs {
+export class ExampleSwaggerDocs implements SwaggerDocsContainer<ExampleController> {
 
     ApiExtraModels = [ExampleEntity]
 

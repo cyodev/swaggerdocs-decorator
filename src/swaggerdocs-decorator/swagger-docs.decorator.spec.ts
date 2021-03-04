@@ -10,12 +10,7 @@ export async function setup() {
 
     const testingModule = await Test.createTestingModule({
         imports: []
-    })
-        // .overrideGuard(AuthorizationGuard)
-        // .useClass(FakeGuard)
-        // .overrideGuard(EncryptedRequestBodyGuard)
-        // .useClass(FakeGuard)
-        .compile()
+    }).compile()
 
     const app = testingModule.createNestApplication<NestExpressApplication>()
     await app.init()
