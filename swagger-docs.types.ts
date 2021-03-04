@@ -16,4 +16,4 @@ type SwaggerDocsExtraModels = {
     ApiExtraModels?: Class[]
 }
 
-export type SwaggerDocs<T> = SwaggerDocsMethods<T> & SwaggerDocsExtraModels
+export type SwaggerDocsContainer<T> = SwaggerDocsMethods<T> & SwaggerDocsExtraModels
