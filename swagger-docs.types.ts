@@ -16,4 +16,8 @@ type SwaggerDocsExtraModels = {
     ApiExtraModels?: Class[]
 }
 
-export type SwaggerDocsContainer<T> = SwaggerDocsMethods<T> & SwaggerDocsExtraModels
+// Anything of type SwaggerDocsContainer<T>
+// must be a class (note: this also covers the { name: string } part of the type declaration)
+// must have all the same properties as type T (excluding private properties and properties that aren't functions)
+// may have an ApiExtraModels property
+export type SwaggerDocsContainer<T> = SwaggerDocsMethods<T> & SwaggerDocsExtraModels & Class & { name: string }
