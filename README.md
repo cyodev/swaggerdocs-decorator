@@ -6,7 +6,7 @@ For a complete example, please see the files in the `example/` directory of this
 
 -----------
 
-The idea behind this decorator is that it is applied to a controller, and passed a class (called the docs container) with all the same properties. 
+This decorator annotates your controller at the class level. It must be passed a class that contains your documentation - more on how it's formatted below.
 
 ```
 @Controller('/')
