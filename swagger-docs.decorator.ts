@@ -1,26 +1,5 @@
 import { Logger } from '@nestjs/common'
 import { ApiExtraModels } from '@nestjs/swagger'
-import {ExampleController} from "./example/example.controller";
-
-// Extracts only function keys from a type
-type ExtractFunctions<T> = {
-  [K in keyof T]: T[K] extends Function ? K : never
-}[keyof T]
-
-type ClassMethods<T> = Pick<T, ExtractFunctions<T>>
-
-type SwaggerDocsMethods<T> = {
-    [P in keyof ClassMethods<T>]: Array<MethodDecorator>
-}
-
-type Class = { new(...args: any[]): any; };
-
-type SwaggerDocsExtraModels = {
-    ApiExtraModels?: Class[]
-}
-
-export type SwaggerDocs<T> = SwaggerDocsMethods<T> & SwaggerDocsExtraModels
-
 
 export const SwaggerDocs = (docsContainerClass) => {
     const docsContainer = new docsContainerClass()
