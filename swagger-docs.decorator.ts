@@ -1,9 +1,8 @@
 import { Logger } from '@nestjs/common'
 import { ApiExtraModels } from '@nestjs/swagger'
+import {SwaggerDocsContainer} from "./swagger-docs.types";
 
-export const SwaggerDocs = (docsContainerClass) => {
-    const docsContainer = new docsContainerClass()
-
+export const SwaggerDocs = (docsContainerClass: SwaggerDocsContainer<unknown>) => {
     // The idea behind this decorator is that it is applied to a controller, and passed a class (called the docs
     // container) with all the same properties. Each property in the docs container is set equal to an array of
     // decorator functions created by calling swagger functions ( eg: [ApiOkResponse(), ApiBadGatewayResponse()] )
@@ -17,6 +16,10 @@ export const SwaggerDocs = (docsContainerClass) => {
     // then the ApiExtraModels decorator will be applied to your controller with the elements of that array as
     // arguments.
     return (target) => {
+        // the below variable is purely to get typescript to enforce the more specific typing for docsContainerClass
+        const restrictDocsContainerType: SwaggerDocsContainer<typeof target> = docsContainerClass
+        const docsContainer = new docsContainerClass()
+
         const controllerClass = target
         const controllerPrototype = target.prototype
 
