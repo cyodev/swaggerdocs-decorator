@@ -6,10 +6,29 @@ import {
     ApiOperation,
     ApiParam
 } from '@nestjs/swagger'
+import { ExampleController } from './example.controller'
 import { ExampleDTO, ExamplesBulkDTO, ExamplesListResponse } from './example.dto'
 import { ExampleCategory } from './example.enums'
 import { Injectable } from '@nestjs/common'
 import { ExampleEntity } from './example.entity'
+
+
+type ClassProperties<T> = Partial<Omit<T, 'constructor'>>
+
+type ExtractFunctions<T> = {
+  [K in keyof T]: T[K] extends Function ? K : never
+}[keyof T]
+
+type ClassMethods<T> = Pick<ClassProperties<T>, ExtractFunctions<ClassProperties<T>>>
+
+type SwaggerDocs<T> = {
+    [P in keyof ClassMethods<T>]: () => any //TODO: replace me
+}
+
+// Try to make a type-safe version of ExampleSwaggerDocs
+class Foo implements SwaggerDocs<ExampleController> {
+
+}
 
 @Injectable()
 export class ExampleSwaggerDocs {
