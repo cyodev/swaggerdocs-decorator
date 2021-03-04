@@ -1,3 +1,5 @@
+import {Injectable} from "@nestjs/common";
+import {ExampleCategory} from "./example.enums";
 import {
     ApiBadRequestResponse,
     ApiBody,
@@ -5,19 +7,14 @@ import {
     ApiOkResponse,
     ApiOperation,
     ApiParam
-} from '@nestjs/swagger'
-import { SwaggerDocs } from '../swagger-docs.decorator'
-import { ExampleController } from './example.controller'
-import { ExampleDTO, ExamplesBulkDTO, ExamplesListResponse } from './example.dto'
-import { ExampleCategory } from './example.enums'
-import { Injectable } from '@nestjs/common'
-import { ExampleEntity } from './example.entity'
-
-
-// Try to make a type-safe version of ExampleSwaggerDocs
+} from "@nestjs/swagger";
+import {ExampleController} from "./example.controller";
+import {ExampleDTO, ExamplesBulkDTO, ExamplesListResponse} from "./example.dto";
+import {SwaggerDocsContainer} from "../swagger-docs.types";
+import {ExampleEntity} from "./example.entity";
 
 @Injectable()
-export class ExampleSwaggerDocs implements SwaggerDocs<ExampleController> {
+export class ExampleSwaggerDocs implements SwaggerDocsContainer<ExampleController> {
 
     ApiExtraModels = [ExampleEntity]
 
