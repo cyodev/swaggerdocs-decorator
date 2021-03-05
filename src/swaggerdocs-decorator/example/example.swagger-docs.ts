@@ -34,8 +34,8 @@ export class ExampleSwaggerDocs
     }),
     ApiOkResponse({
       description:
-        `returns a list of just the records' titles in the order they were originally inserted in, eg: ` +
-        `{ examples: ['Record A', 'Record B', 'Record C'] }`,
+        `returns a list of just the records' titles in the order they were originally ` +
+        `inserted in, eg: { examples: ['Record A', 'Record B', 'Record C'] }`,
       type: ExamplesListResponse
     })
   ];
@@ -65,7 +65,8 @@ export class ExampleSwaggerDocs
   addBulk = [
     ApiOperation({
       summary:
-        'Adds multiple records to the given category all at once. Developer authorization is required.'
+        'Adds multiple records to the given category all at once. ' +
+        'Developer authorization is required.'
     }),
     ApiParam({
       name: 'category',

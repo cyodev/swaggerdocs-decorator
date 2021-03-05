@@ -2,18 +2,19 @@ import { Logger } from '@nestjs/common';
 import { ApiExtraModels } from '@nestjs/swagger';
 
 export const SwaggerDocs = (docsContainerClass) => {
-  // The idea behind this decorator is that it is applied to a controller, and passed a class (called the docs
-  // container) with all the same properties. Each property in the docs container is set equal to an array of
-  // decorator functions created by calling swagger functions ( eg: [ApiOkResponse(), ApiBadGatewayResponse()] )
-  // These decorator functions will then be applied to the corresponding property in the controller.
-  // Half of this code is about matching properties between the controller and the docs container, and the other
-  // half is about applying the decorator functions found in the property of the docs class to the property of the
-  // controller.
+  // The idea behind this decorator is that it is applied to a controller, and passed a class
+  // (called the docs container) with all the same properties. Each property in the docs
+  // container is set equal to an array of decorator functions created by calling swagger
+  // functions ( eg: [ApiOkResponse(), ApiBadGatewayResponse()] ) These decorator functions
+  // will then be applied to the corresponding property in the controller. Half of this code
+  // is about matching properties between the controller and the docs container, and the
+  // other half is about applying the decorator functions found in the property of the docs
+  // class to the property of the controller.
   //
-  // As a bonus, this decorator incorporates the functionality of ApiExtraModels. If you add a property called
-  // "ApiExtraModels" to the docs container and set it equal to an array of classes (eg: ApiExtraModels = [MyEntity])
-  // then the ApiExtraModels decorator will be applied to your controller with the elements of that array as
-  // arguments.
+  // As a bonus, this decorator incorporates the functionality of ApiExtraModels. If you add
+  // a property called "ApiExtraModels" to the docs container and set it equal to an array of
+  // classes (eg: ApiExtraModels = [MyEntity]) then the ApiExtraModels decorator will be applied
+  // to your controller with the elements of that array as arguments.
   return (target) => {
     const docsContainer = new docsContainerClass();
 
@@ -28,8 +29,9 @@ export const SwaggerDocs = (docsContainerClass) => {
 
       if (!Object.getOwnPropertyDescriptor(controllerPrototype, propertyName)) {
         Logger.warn(
-          `Documentation found in specified docs container "${docsContainerClass.name}" for method ` +
-            `"${propertyName}" that doesn't exist in the controller "${controllerClass.name}".`
+          `Documentation found in specified docs container "${docsContainerClass.name}" ` +
+            `for method "${propertyName}" that doesn't exist in the controller ` +
+            `"${controllerClass.name}".`
         );
       }
     });
@@ -53,8 +55,8 @@ export const SwaggerDocs = (docsContainerClass) => {
       );
       if (!docsForProperty) {
         Logger.warn(
-          `Documentation for method "${propertyName}" in controller "${controllerClass.name}" was not ` +
-            `included in specified docs container "${docsContainerClass.name}".`
+          `Documentation for method "${propertyName}" in controller "${controllerClass.name}" ` +
+            `was not included in specified docs container "${docsContainerClass.name}".`
         );
         return;
       }
@@ -72,8 +74,8 @@ export const SwaggerDocs = (docsContainerClass) => {
           if (typeof call !== 'function') {
             Logger.error(
               `Documentation for method "${propertyName}" in specified docs container ` +
-                `"${docsContainerClass.name}" for controller "${controllerClass.name}" included an ` +
-                `incorrect element. All elements must be swagger decorators.`
+                `"${docsContainerClass.name}" for controller "${controllerClass.name}" included ` +
+                `an incorrect element. All elements must be swagger decorators.`
             );
 
             continue;
@@ -96,9 +98,10 @@ export const SwaggerDocs = (docsContainerClass) => {
         );
       } catch {
         Logger.error(
-          `Something went wrong with documentation for method "${propertyName}" in specified docs ` +
-            `container "${docsContainerClass.name}" for controller "${controllerClass.name}". ` +
-            `Documentation likely included an incorrect element. All elements must be swagger decorators.`
+          `Something went wrong with documentation for method "${propertyName}" in specified ` +
+            `docs container "${docsContainerClass.name}" for controller "${controllerClass.name}". ` +
+            `Documentation likely included an incorrect element. All elements must be swagger ` +
+            `decorators.`
         );
       }
     });
@@ -123,7 +126,8 @@ export const SwaggerDocs = (docsContainerClass) => {
       Logger.error(
         `Something went wrong with documentation for ApiExtraModels in docs ` +
           `container "${docsContainerClass.name}" for controller "${controllerClass.name}". ` +
-          `Documentation likely included an incorrect element. All elements must be class references.`
+          `Documentation likely included an incorrect element. All elements must be class ` +
+          `references.`
       );
     }
 

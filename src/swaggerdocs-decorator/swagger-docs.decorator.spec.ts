@@ -105,23 +105,27 @@ describe('Swagger Docs Decorator', () => {
     expect(Logger.log).toBeCalledTimes(0);
   });
 
-  it('should handle malformed docs container properties gracefully and log errors.', () => {
-    class TestApiDocs {
-      get = 'Not an array';
-    }
-
-    @SwaggerDocs(TestApiDocs)
-    // @ts-ignore
-    class TestController {
-      async get() {
-        return { data: [] };
+  it(
+    'should handle malformed docs container properties gracefully and ' +
+      'log errors.',
+    () => {
+      class TestApiDocs {
+        get = 'Not an array';
       }
-    }
 
-    expect(Logger.error).toBeCalled();
-    expect(Logger.warn).toBeCalledTimes(0);
-    expect(Logger.log).toBeCalledTimes(0);
-  });
+      @SwaggerDocs(TestApiDocs)
+      // @ts-ignore
+      class TestController {
+        async get() {
+          return { data: [] };
+        }
+      }
+
+      expect(Logger.error).toBeCalled();
+      expect(Logger.warn).toBeCalledTimes(0);
+      expect(Logger.log).toBeCalledTimes(0);
+    }
+  );
 
   it('should issue a warning if an extra documentation parameter is found.', () => {
     class TestApiDocs {
@@ -144,8 +148,8 @@ describe('Swagger Docs Decorator', () => {
   });
 
   it(
-    `should issue a warning if a property on the controller doesn't have a matching parameter in the ` +
-      `docs container.`,
+    `should issue a warning if a property on the controller doesn't have a ` +
+      `matching parameter in the docs container.`,
     () => {
       class TestApiDocs {
         get = [];
@@ -177,187 +181,199 @@ describe('Swagger Docs Decorator', () => {
     }
   );
 
-  it('should not issue mismatching property warnings for the ApiExtraModels property (if present).', () => {
-    class TestApiDocs {
-      get = [];
-      ApiExtraModels = [];
-    }
-
-    @SwaggerDocs(TestApiDocs)
-    // @ts-ignore
-    class TestController {
-      async get() {
-        return { data: [] };
+  it(
+    'should not issue mismatching property warnings for the ' +
+      'ApiExtraModels property (if present).',
+    () => {
+      class TestApiDocs {
+        get = [];
+        ApiExtraModels = [];
       }
-    }
 
-    expect(Logger.error).toBeCalledTimes(0);
-    expect(Logger.warn).toBeCalledTimes(0);
-    expect(Logger.log).toBeCalledTimes(0);
-  });
-
-  it('should apply specified swagger decorators to the correct properties in the controller class.', () => {
-    // set up spies an mock decorators
-    class SpyableHoster {
-      static mDecor1 = (a, b, c) => c;
-      static mDecor2 = (a, b, c) => c;
-      static mDecor3 = (a, b, c) => c;
-      static mDecor4 = (a, b, c) => c;
-      static mDecor5 = (a, b, c) => c;
-    }
-
-    jest.spyOn(SpyableHoster, 'mDecor1');
-    jest.spyOn(SpyableHoster, 'mDecor2');
-    jest.spyOn(SpyableHoster, 'mDecor3');
-    jest.spyOn(SpyableHoster, 'mDecor4');
-    jest.spyOn(SpyableHoster, 'mDecor5');
-
-    jest
-      .spyOn(SwaggerLib, 'ApiOperation')
-      .mockImplementation((o) => SpyableHoster.mDecor1);
-    jest
-      .spyOn(SwaggerLib, 'ApiOkResponse')
+      @SwaggerDocs(TestApiDocs)
       // @ts-ignore
-      .mockImplementation((o) => SpyableHoster.mDecor2);
-    jest
-      .spyOn(SwaggerLib, 'ApiBadRequestResponse')
+      class TestController {
+        async get() {
+          return { data: [] };
+        }
+      }
+
+      expect(Logger.error).toBeCalledTimes(0);
+      expect(Logger.warn).toBeCalledTimes(0);
+      expect(Logger.log).toBeCalledTimes(0);
+    }
+  );
+
+  it(
+    'should apply specified swagger decorators to the correct properties ' +
+      'in the controller class.',
+    () => {
+      // set up spies an mock decorators
+      class SpyableHoster {
+        static mDecor1 = (a, b, c) => c;
+        static mDecor2 = (a, b, c) => c;
+        static mDecor3 = (a, b, c) => c;
+        static mDecor4 = (a, b, c) => c;
+        static mDecor5 = (a, b, c) => c;
+      }
+
+      jest.spyOn(SpyableHoster, 'mDecor1');
+      jest.spyOn(SpyableHoster, 'mDecor2');
+      jest.spyOn(SpyableHoster, 'mDecor3');
+      jest.spyOn(SpyableHoster, 'mDecor4');
+      jest.spyOn(SpyableHoster, 'mDecor5');
+
+      jest
+        .spyOn(SwaggerLib, 'ApiOperation')
+        .mockImplementation((o) => SpyableHoster.mDecor1);
+      jest
+        .spyOn(SwaggerLib, 'ApiOkResponse')
+        // @ts-ignore
+        .mockImplementation((o) => SpyableHoster.mDecor2);
+      jest
+        .spyOn(SwaggerLib, 'ApiBadRequestResponse')
+        // @ts-ignore
+        .mockImplementation((o) => SpyableHoster.mDecor3);
+      jest
+        .spyOn(SwaggerLib, 'ApiBody')
+        .mockImplementation((o) => SpyableHoster.mDecor4);
+      jest
+        .spyOn(SwaggerLib, 'ApiParam')
+        .mockImplementation((o) => SpyableHoster.mDecor5);
+
+      // ===================
+
+      class TestApiDocs {
+        method1 = [ApiOperation({ summary: 'ApiOperation summary test' })];
+        method2 = [
+          ApiOperation({}),
+          ApiOkResponse(),
+          ApiBadRequestResponse(),
+          ApiBody({})
+        ];
+        method3 = [
+          ApiOkResponse(),
+          ApiParam({ name: 'test1' }),
+          ApiParam({ name: 'test2' })
+        ];
+      }
+
+      @SwaggerDocs(TestApiDocs)
       // @ts-ignore
-      .mockImplementation((o) => SpyableHoster.mDecor3);
-    jest
-      .spyOn(SwaggerLib, 'ApiBody')
-      .mockImplementation((o) => SpyableHoster.mDecor4);
-    jest
-      .spyOn(SwaggerLib, 'ApiParam')
-      .mockImplementation((o) => SpyableHoster.mDecor5);
+      class TestController {
+        async method1() {
+          return { data: [] };
+        }
 
-    // ===================
+        async method2() {
+          return {};
+        }
 
-    class TestApiDocs {
-      method1 = [ApiOperation({ summary: 'ApiOperation summary test' })];
-      method2 = [
-        ApiOperation({}),
-        ApiOkResponse(),
-        ApiBadRequestResponse(),
-        ApiBody({})
-      ];
-      method3 = [
-        ApiOkResponse(),
-        ApiParam({ name: 'test1' }),
-        ApiParam({ name: 'test2' })
-      ];
+        async method3() {
+          return {};
+        }
+      }
+
+      const getDescriptor = (methodName) =>
+        Object.getOwnPropertyDescriptor(TestController.prototype, methodName);
+
+      expect(SpyableHoster.mDecor1).toBeCalledTimes(2);
+      expect(SpyableHoster.mDecor1).toBeCalledWith(
+        TestController,
+        'method1',
+        getDescriptor('method1')
+      );
+      expect(SpyableHoster.mDecor1).toBeCalledWith(
+        TestController,
+        'method2',
+        getDescriptor('method2')
+      );
+
+      expect(SpyableHoster.mDecor2).toBeCalledTimes(2);
+      expect(SpyableHoster.mDecor2).toBeCalledWith(
+        TestController,
+        'method2',
+        getDescriptor('method2')
+      );
+      expect(SpyableHoster.mDecor2).toBeCalledWith(
+        TestController,
+        'method3',
+        getDescriptor('method3')
+      );
+
+      expect(SpyableHoster.mDecor3).toBeCalledTimes(1);
+      expect(SpyableHoster.mDecor3).toBeCalledWith(
+        TestController,
+        'method2',
+        getDescriptor('method2')
+      );
+
+      expect(SpyableHoster.mDecor4).toBeCalledTimes(1);
+      expect(SpyableHoster.mDecor4).toBeCalledWith(
+        TestController,
+        'method2',
+        getDescriptor('method2')
+      );
+
+      expect(SpyableHoster.mDecor5).toBeCalledTimes(2);
+      expect(SpyableHoster.mDecor5).toBeCalledWith(
+        TestController,
+        'method3',
+        getDescriptor('method3')
+      );
+      expect(SpyableHoster.mDecor5).toBeCalledWith(
+        TestController,
+        'method3',
+        getDescriptor('method3')
+      );
+
+      expect(Logger.error).toBeCalledTimes(0);
+      expect(Logger.warn).toBeCalledTimes(0);
+      expect(Logger.log).toBeCalledTimes(0);
     }
+  );
 
-    @SwaggerDocs(TestApiDocs)
-    // @ts-ignore
-    class TestController {
-      async method1() {
-        return { data: [] };
+  it(
+    `should apply decorators even when other properties' decorator ` +
+      `lists have errors.`,
+    () => {
+      jest.spyOn(SwaggerLib, 'ApiOperation').mockImplementation((o) => {
+        return MockUtils.mockMethodDecorator;
+      });
+
+      class TestApiDocs {
+        // tslint:disable-next-line:no-empty
+        fail = [() => {}];
+        get = [ApiOperation({ summary: 'ApiOperation summary test' })];
       }
 
-      async method2() {
-        return {};
+      @SwaggerDocs(TestApiDocs)
+      // @ts-ignore
+      class TestController {
+        async get() {
+          return { data: [] };
+        }
+
+        async fail() {
+          return {};
+        }
       }
 
-      async method3() {
-        return {};
-      }
+      expect(SwaggerLib.ApiOperation).toBeCalledWith({
+        summary: 'ApiOperation summary test'
+      });
+      // make sure the ApiOperation decorator is correctly directed to the controller's property
+      expect(MockUtils.mockMethodDecorator).toBeCalledWith(
+        TestController,
+        'get',
+        Object.getOwnPropertyDescriptor(TestController.prototype, 'get')
+      );
+
+      expect(Logger.error).toBeCalledTimes(1);
+      expect(Logger.warn).toBeCalledTimes(0);
+      expect(Logger.log).toBeCalledTimes(0);
     }
-
-    const getDescriptor = (methodName) =>
-      Object.getOwnPropertyDescriptor(TestController.prototype, methodName);
-
-    expect(SpyableHoster.mDecor1).toBeCalledTimes(2);
-    expect(SpyableHoster.mDecor1).toBeCalledWith(
-      TestController,
-      'method1',
-      getDescriptor('method1')
-    );
-    expect(SpyableHoster.mDecor1).toBeCalledWith(
-      TestController,
-      'method2',
-      getDescriptor('method2')
-    );
-
-    expect(SpyableHoster.mDecor2).toBeCalledTimes(2);
-    expect(SpyableHoster.mDecor2).toBeCalledWith(
-      TestController,
-      'method2',
-      getDescriptor('method2')
-    );
-    expect(SpyableHoster.mDecor2).toBeCalledWith(
-      TestController,
-      'method3',
-      getDescriptor('method3')
-    );
-
-    expect(SpyableHoster.mDecor3).toBeCalledTimes(1);
-    expect(SpyableHoster.mDecor3).toBeCalledWith(
-      TestController,
-      'method2',
-      getDescriptor('method2')
-    );
-
-    expect(SpyableHoster.mDecor4).toBeCalledTimes(1);
-    expect(SpyableHoster.mDecor4).toBeCalledWith(
-      TestController,
-      'method2',
-      getDescriptor('method2')
-    );
-
-    expect(SpyableHoster.mDecor5).toBeCalledTimes(2);
-    expect(SpyableHoster.mDecor5).toBeCalledWith(
-      TestController,
-      'method3',
-      getDescriptor('method3')
-    );
-    expect(SpyableHoster.mDecor5).toBeCalledWith(
-      TestController,
-      'method3',
-      getDescriptor('method3')
-    );
-
-    expect(Logger.error).toBeCalledTimes(0);
-    expect(Logger.warn).toBeCalledTimes(0);
-    expect(Logger.log).toBeCalledTimes(0);
-  });
-
-  it(`should apply decorators even when other properties' decorator lists have errors.`, () => {
-    jest.spyOn(SwaggerLib, 'ApiOperation').mockImplementation((o) => {
-      return MockUtils.mockMethodDecorator;
-    });
-
-    class TestApiDocs {
-      // tslint:disable-next-line:no-empty
-      fail = [() => {}];
-      get = [ApiOperation({ summary: 'ApiOperation summary test' })];
-    }
-
-    @SwaggerDocs(TestApiDocs)
-    // @ts-ignore
-    class TestController {
-      async get() {
-        return { data: [] };
-      }
-
-      async fail() {
-        return {};
-      }
-    }
-
-    expect(SwaggerLib.ApiOperation).toBeCalledWith({
-      summary: 'ApiOperation summary test'
-    });
-    // make sure that the ApiOperation decorator is correctly directed to the controller's property
-    expect(MockUtils.mockMethodDecorator).toBeCalledWith(
-      TestController,
-      'get',
-      Object.getOwnPropertyDescriptor(TestController.prototype, 'get')
-    );
-
-    expect(Logger.error).toBeCalledTimes(1);
-    expect(Logger.warn).toBeCalledTimes(0);
-    expect(Logger.log).toBeCalledTimes(0);
-  });
+  );
 
   it('should call ApiExtraModels if the docs container is configured to do so.', () => {
     jest.spyOn(SwaggerLib, 'ApiOperation').mockImplementation((o) => {
