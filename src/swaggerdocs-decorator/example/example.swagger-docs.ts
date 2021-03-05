@@ -15,7 +15,6 @@ import {ExampleEntity} from "./example.entity";
 
 @Injectable()
 export class ExampleSwaggerDocs implements SwaggerDocsContainer<ExampleController> {
-
     ApiExtraModels = [ExampleEntity]
 
     getRecords = [

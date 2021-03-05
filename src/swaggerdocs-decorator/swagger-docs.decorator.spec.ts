@@ -204,7 +204,9 @@ describe('Swagger Docs Decorator', () => {
         jest.spyOn(SpyableHoster, 'mDecor5')
 
         jest.spyOn(SwaggerLib, 'ApiOperation').mockImplementation((o) => SpyableHoster.mDecor1)
+        // @ts-ignore
         jest.spyOn(SwaggerLib, 'ApiOkResponse').mockImplementation((o) => SpyableHoster.mDecor2)
+        // @ts-ignore
         jest.spyOn(SwaggerLib, 'ApiBadRequestResponse').mockImplementation((o) => SpyableHoster.mDecor3)
         jest.spyOn(SwaggerLib, 'ApiBody').mockImplementation((o) => SpyableHoster.mDecor4)
         jest.spyOn(SwaggerLib, 'ApiParam').mockImplementation((o) => SpyableHoster.mDecor5)
