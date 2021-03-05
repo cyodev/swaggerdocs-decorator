@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import {SwaggerDocs} from "./swagger-docs.decorator";
+import { SwaggerDocs } from './swagger-docs.decorator';
 
 @Module({
-    imports: [],
-    exports: [SwaggerDocs],
+  imports: [],
+  exports: [SwaggerDocs]
 })
 export class AppModule {}
