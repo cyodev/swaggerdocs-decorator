@@ -2,7 +2,7 @@
 
 This decorator is meant to reduce code bloat in your controllers by moving API documentation to another file. 
 
-For a complete example, please see the files in the `example/` directory of this repo.
+For a complete example, please see the files in the `/src/swaggerdocs-decorator/example` directory of this repo.
 
 -----------
 
@@ -21,8 +21,10 @@ export class ExampleController {
 
 Each property in the docs container is set equal to an array of decorator functions created by calling swagger functions. These decorator functions will then be applied to the corresponding property in the controller.
 
+Reccomended: to enforce type safety, your docs container class should implement `SwaggerDocsContainer<ControllerType>`.
+
 ```
-export class ExampleDocsContainer {
+export class ExampleDocsContainer implements SwaggerDocsContainer<ExampleController> {
   getRecords = [
     ApiOperation({ summary: 'Example route - gets a list of records.' }),
     ApiOkResponse({ description: 'Lorum ipsum dolor'})
