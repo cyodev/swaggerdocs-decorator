@@ -1,13 +1,13 @@
 
 
 export class ExampleDTO {
-    recordName!: string
+    recordName!: string;
 }
 
 export class ExamplesBulkDTO {
-    recordNames!: string[]
+    recordNames!: string[];
 }
 
 export class ExamplesListResponse {
-    records: string[]
+    records: string[];
 }

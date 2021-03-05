@@ -21,12 +21,12 @@ export class ExampleController {
 
     @Get('/:category')
     async getRecords(@Param('category') category: ExampleCategory) {
-        return await this.exampleService.getRecords(category)
+        return await this.exampleService.getRecords(category);
     }
 
     @Post('/:category/add')
     async add(@Param('category') category: ExampleCategory, @Body() dto: ExampleDTO) {
-        return this.exampleService.add(dto.recordName, category)
+        return this.exampleService.add(dto.recordName, category);
     }
 
     @Post('/:category/add/bulk')
@@ -34,6 +34,6 @@ export class ExampleController {
         @Param('category') category: ExampleCategory,
         @Body() dto: ExamplesBulkDTO
     ) {
-        return this.exampleService.addBulk(dto.recordNames, category)
+        return this.exampleService.addBulk(dto.recordNames, category);
     }
 }

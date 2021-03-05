@@ -15,7 +15,7 @@ import {ExampleEntity} from "./example.entity";
 
 @Injectable()
 export class ExampleSwaggerDocs implements SwaggerDocsContainer<ExampleController> {
-    ApiExtraModels = [ExampleEntity]
+    ApiExtraModels = [ExampleEntity];
 
     getRecords = [
         ApiOperation({
@@ -33,7 +33,7 @@ export class ExampleSwaggerDocs implements SwaggerDocsContainer<ExampleControlle
                 '{ examples: ["Record A", "Record B", "Record C"] }',
             type: ExamplesListResponse
         })
-    ]
+    ];
 
     add = [
         ApiOperation({
@@ -54,7 +54,7 @@ export class ExampleSwaggerDocs implements SwaggerDocsContainer<ExampleControlle
                 'Encountered if the "recordName" body parameter is malformed, missing, ' +
                 'or already exists in the given category.'
         })
-    ]
+    ];
 
     addBulk = [
         ApiOperation({
@@ -74,5 +74,5 @@ export class ExampleSwaggerDocs implements SwaggerDocsContainer<ExampleControlle
         ApiBadRequestResponse({
             description: 'Encountered if the "recordNames" body parameter is malformed or missing.'
         })
-    ]
+    ];
 }

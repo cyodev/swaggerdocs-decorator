@@ -15,104 +15,104 @@ export const SwaggerDocs = (docsContainerClass) => {
     // then the ApiExtraModels decorator will be applied to your controller with the elements of that array as
     // arguments.
     return (target) => {
-        const docsContainer = new docsContainerClass()
+        const docsContainer = new docsContainerClass();
 
-        const controllerClass = target
-        const controllerPrototype = target.prototype
+        const controllerClass = target;
+        const controllerPrototype = target.prototype;
 
         // Look for extra documentation
         Object.getOwnPropertyNames(docsContainer).forEach((propertyName) => {
             if (propertyName === 'constructor' || propertyName === 'ApiExtraModels') {
-                return
+                return;
             }
 
             if (!Object.getOwnPropertyDescriptor(controllerPrototype, propertyName)) {
                 Logger.warn(
                     `Documentation found in specified docs container "${docsContainerClass.name}" for method ` +
                         `"${propertyName}" that doesn't exist in the controller "${controllerClass.name}".`
-                )
+                );
             }
-        })
+        });
 
         // Logic; apply the documentation decorators
         Object.getOwnPropertyNames(controllerPrototype).forEach((propertyName) => {
-            const propertyValue = controllerPrototype[propertyName]
-            const isMethod = propertyValue instanceof Function
+            const propertyValue = controllerPrototype[propertyName];
+            const isMethod = propertyValue instanceof Function;
             if (!isMethod) {
-                return
+                return;
             }
 
             // no documentation needed for the constructor
             if (propertyName === 'constructor') {
-                return
+                return;
             }
 
-            const docsForProperty = Object.getOwnPropertyDescriptor(docsContainer, propertyName)
+            const docsForProperty = Object.getOwnPropertyDescriptor(docsContainer, propertyName);
             if (!docsForProperty) {
                 Logger.warn(
                     `Documentation for method "${propertyName}" in controller "${controllerClass.name}" was not ` +
                         `included in specified docs container "${docsContainerClass.name}".`
-                )
-                return
+                );
+                return;
             }
 
-            const decoratorsForProperty = docsForProperty.value
-            const initialDescriptor = Object.getOwnPropertyDescriptor(controllerPrototype, propertyName)
+            const decoratorsForProperty = docsForProperty.value;
+            const initialDescriptor = Object.getOwnPropertyDescriptor(controllerPrototype, propertyName);
 
             try {
                 // heavily modified from https://stackoverflow.com/a/47621528/15107363
-                let decoratedDescriptor = initialDescriptor
+                let decoratedDescriptor = initialDescriptor;
                 for (const call of decoratorsForProperty) {
                     if (typeof call !== 'function') {
                         Logger.error(
                             `Documentation for method "${propertyName}" in specified docs container ` +
                                 `"${docsContainerClass.name}" for controller "${controllerClass.name}" included an ` +
                                 `incorrect element. All elements must be swagger decorators.`
-                        )
+                        );
 
-                        continue
+                        continue;
                     }
-                    decoratedDescriptor = call(controllerClass, propertyName, decoratedDescriptor)
+                    decoratedDescriptor = call(controllerClass, propertyName, decoratedDescriptor);
                 }
 
                 if (!decoratedDescriptor) {
-                    throw {}
+                    throw {};
                 }
 
-                Object.defineProperty(controllerPrototype, propertyName, decoratedDescriptor)
+                Object.defineProperty(controllerPrototype, propertyName, decoratedDescriptor);
             } catch {
                 Logger.error(
                     `Something went wrong with documentation for method "${propertyName}" in specified docs ` +
                         `container "${docsContainerClass.name}" for controller "${controllerClass.name}". ` +
                         `Documentation likely included an incorrect element. All elements must be swagger decorators.`
-                )
+                );
             }
-        })
+        });
 
         //
         // bonus: incorporate functionality of @ApiExtraModels
         //
         if (!docsContainer.ApiExtraModels) {
-            return controllerClass
+            return controllerClass;
         }
 
         try {
-            const call = ApiExtraModels(...docsContainer.ApiExtraModels)
-            const decoratedTarget = call(controllerClass)
+            const call = ApiExtraModels(...docsContainer.ApiExtraModels);
+            const decoratedTarget = call(controllerClass);
 
             if (!decoratedTarget) {
-                throw {}
+                throw {};
             }
 
-            return decoratedTarget
+            return decoratedTarget;
         } catch {
             Logger.error(
                 `Something went wrong with documentation for ApiExtraModels in docs ` +
                     `container "${docsContainerClass.name}" for controller "${controllerClass.name}". ` +
                     `Documentation likely included an incorrect element. All elements must be class references.`
-            )
+            );
         }
 
-        return controllerClass
+        return controllerClass;
     }
 }
