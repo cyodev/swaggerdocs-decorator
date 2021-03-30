@@ -8,7 +8,7 @@ For a complete example, please see the files in the `/src/swaggerdocs-decorator/
 
 This decorator annotates your controller at the class level. It must be passed a class that contains your documentation - more on how it's formatted below.
 
-```
+```typescript
 @Controller('/')
 @SwaggerDocs(ExampleDocsContainer)
 export class ExampleController {
@@ -23,7 +23,7 @@ Each property in the docs container is set equal to an array of decorator functi
 
 Reccomended: to enforce type safety, your docs container class should implement `SwaggerDocsContainer<ControllerType>`.
 
-```
+```typescript
 export class ExampleDocsContainer implements SwaggerDocsContainer<ExampleController> {
   getRecords = [
     ApiOperation({ summary: 'Example route - gets a list of records.' }),
@@ -36,7 +36,7 @@ export class ExampleDocsContainer implements SwaggerDocsContainer<ExampleControl
 
 This decorator also incorporates the functionality of ApiExtraModels. If you add a property called "ApiExtraModels" to the docs container and set it equal to an array of classes (eg: ApiExtraModels = [MyEntity]) then the ApiExtraModels decorator will be applied to your controller with the elements of that array as arguments.
 
-```
+```typescript
 export class ExampleDocsContainer {
   getRecords = [
     ApiOperation({ summary: 'Example route - gets a list of records.' }),
